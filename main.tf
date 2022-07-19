@@ -46,6 +46,10 @@ module "policyset_definitions" {
     }
   ]
 
-
 }
 
+module "functions" {
+  source = "./modules/functions"
+
+  region = var.default_region
+}

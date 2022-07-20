@@ -29,4 +29,10 @@ az storage container create -n tfstate-sandbox --account-name sttfstatesandbox
 *note: we use zone reduntant storage above for a little added robustness, if you want to bump that up to geo redundant or down to locally redundant is up to you.* 
 
 # references
-Policy management reused from https://github.com/globalbao/azure-policy-as-code
+Policy management reused from:
+
+https://github.com/globalbao/azure-policy-as-code
+
+Cleanup script reused from:
+
+https://github.com/FBoucher/AzSubscriptionCleaner

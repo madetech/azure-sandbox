@@ -60,7 +60,7 @@ resource "azurerm_policy_definition" "addTagToRG" {
           "displayName" : "Tag Value '${var.mandatory_tag_value}'",
           "description" : "Value of the tag, such as '${var.mandatory_tag_value}'"
         },
-        "defaultValue" : "'${var.mandatory_tag_value}'"
+        "defaultValue" : "${var.mandatory_tag_value}"
       }
     }
   )

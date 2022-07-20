@@ -1,4 +1,4 @@
-name: "Terraform"
+name: "deploy"
 
 on:
   push:
@@ -76,3 +76,23 @@ jobs:
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: terraform apply -auto-approve -input=false
+        
+      - name: 'Login via Azure CLI'
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        uses: azure/login@v1
+        with:
+          creds: '{ "clientId": "${{ secrets.ARM_CLIENT_ID }}", "clientSecret": "${{ secrets.ARM_CLIENT_SECRET }}", "subscriptionId": "${{ secrets.ARM_SUBSCRIPTION_ID }}", "tenantId": "${{ secrets.ARM_TENANT_ID }}" }'
+      
+      - name: Get Publish Profile
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        id: getPublishProfile
+        run: echo "::set-output name=PUBLISH_PROFILE::$(az webapp deployment list-publishing-profiles -g 'rg-cleanup-functions' -n 'func-cleanupfunc' --xml)"
+      
+      - name: 'Run Azure Functions Action'
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        uses: Azure/functions-action@v1
+        with:
+          app-name: func-cleanupfunc
+          package: ./CleanupFunctions
+          publish-profile: ${{ steps.getPublishProfile.outputs.PUBLISH_PROFILE }}
+

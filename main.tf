@@ -53,6 +53,10 @@ module "policyset_definitions" {
 
 module "functions" {
   source = "./modules/functions"
+  region = var.default_region
+}
 
+module "dashboards" {
+  source = "./modules/dashboards"
   region = var.default_region
 }

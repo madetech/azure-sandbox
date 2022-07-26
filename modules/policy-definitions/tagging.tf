@@ -291,8 +291,4 @@ resource "azurerm_policy_definition" "addCreatedOnTag" {
       }
     }
   )
-  parameters = jsonencode(
-    {
-    }
-  )
 }

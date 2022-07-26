@@ -17,3 +17,8 @@ output "bulkInheritTagsFromRG_policy_id" {
   value       = azurerm_policy_definition.bulkInheritTagsFromRG.id
   description = "The policy definition id for bulkInheritTagsFromRG"
 }
+
+output "addCreatedOnTag_policy_id" {
+  value       = azurerm_policy_definition.addCreatedOnTag.id
+  description = "The policy definition id for addCreatedOnTag"
+}

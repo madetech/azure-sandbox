@@ -43,6 +43,9 @@ module "policyset_definitions" {
     },
     {
       policyID = module.policy_definitions.bulkInheritTagsFromRG_policy_id
+    },
+    {
+      policyID = module.policy_definitions.addCreatedOnTag_policy_id
     }
   ]
 

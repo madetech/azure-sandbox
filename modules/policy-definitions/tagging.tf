@@ -256,3 +256,43 @@ resource "azurerm_policy_definition" "bulkInheritTagsFromRG" {
     }
   )
 }
+
+resource "azurerm_policy_definition" "addCreatedOnTag" {
+  name         = "addCreatedOnDate"
+  policy_type  = "Custom"
+  mode         = "All"
+  display_name = "Add a CreatedOn tag"
+  description  = "Adds the mandatory CreatedOn tag when any resource group missing this tag is created or updated. \nExisting resource groups can be remediated by triggering a remediation task.\nIf the tag exists with a different value it will not be changed."
+
+  metadata = jsonencode(
+    {
+      "category" : "${var.policy_definition_category}",
+      "version" : "1.0.0"
+    }
+  )
+  policy_rule = jsonencode(
+    {
+      "if" : {
+        "allOf" : [
+          {
+            "field" : "tags['CreatedOn']",
+            "exists" : "false"
+          }
+        ]
+      },
+      "then" : {
+        "effect" : "append",
+        "details" : [
+          {
+            "field" : "tags['CreatedOn']",
+            "value" : "[utcNow()]"
+          }
+        ]
+      }
+    }
+  )
+  parameters = jsonencode(
+    {
+    }
+  )
+}

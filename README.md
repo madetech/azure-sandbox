@@ -5,6 +5,7 @@ An example Azure self-cleaning Azure sandbox subscription
 
 * Require tagging of all resources with an "Expires" tag. Any resources not tagged ```Expires = False``` will be cleaned up.
     * You'll be able to see non-complaint resources in the policy compliance blade, by default the resources for the tf backend are non-compliant, so use these as an example, then tag them so they don't expire.
+* Require tagging of all resources with a "CreatedOn" tag, so you can quickly see how old resources are in case they escape the purge.
 
 # pre-requisites
 

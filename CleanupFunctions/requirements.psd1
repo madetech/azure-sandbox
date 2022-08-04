@@ -7,4 +7,5 @@
     #'Az' = '8.*'
     'Az.ResourceGraph' = '0.*'
     'Az.Resources' = '6.*'
+    'Az.Accounts'  = '2.*'
 }

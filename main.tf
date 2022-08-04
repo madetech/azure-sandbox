@@ -1,7 +1,7 @@
 terraform {
   required_providers {
     azurerm = {
-      version = "3.14.0"
+      version = "3.16.0"
     }
   }
   backend "azurerm" {
@@ -54,6 +54,8 @@ module "policyset_definitions" {
 module "functions" {
   source = "./modules/functions"
   region = var.default_region
+  // The functions need to exist before they can wire up the eventgrid subscription
+  are_functions_deployed = 1
 }
 
 module "dashboards" {

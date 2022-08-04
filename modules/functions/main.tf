@@ -7,6 +7,9 @@ resource "azurerm_resource_group" "cleanupfunc" {
   tags = {
     "Expires" = "False"
   }
+  lifecycle {
+    ignore_changes = [tags]
+  }
 }
 
 resource "azurerm_storage_account" "cleanupfunc" {
@@ -18,6 +21,9 @@ resource "azurerm_storage_account" "cleanupfunc" {
   tags = {
     "Expires" = "False"
   }
+  lifecycle {
+    ignore_changes = [tags]
+  }
 }
 
 resource "azurerm_service_plan" "cleanupfunc" {
@@ -28,6 +34,9 @@ resource "azurerm_service_plan" "cleanupfunc" {
   sku_name            = "Y1"
   tags = {
     "Expires" = "False"
+  }
+  lifecycle {
+    ignore_changes = [tags]
   }
 }
 
@@ -41,6 +50,9 @@ resource "azurerm_log_analytics_workspace" "cleanupfunc" {
   tags = {
     "Expires" = "False"
   }
+  lifecycle {
+    ignore_changes = [tags]
+  }
 }
 
 resource "azurerm_application_insights" "cleanupfunc" {
@@ -52,6 +64,9 @@ resource "azurerm_application_insights" "cleanupfunc" {
 
   tags = {
     "Expires" = "False"
+  }
+  lifecycle {
+    ignore_changes = [tags]
   }
 }
 
@@ -80,6 +95,9 @@ resource "azurerm_function_app" "cleanupfunc" {
   tags = {
     "Expires" = "False"
   }
+  lifecycle {
+    ignore_changes = [tags]
+  }
 }
 
 resource "azurerm_role_assignment" "cleanupfunc" {
@@ -95,7 +113,7 @@ resource "azurerm_monitor_diagnostic_setting" "cleanupfunc" {
 
   log {
     category = "FunctionAppLogs"
-    enabled  = false
+    enabled  = true
 
     retention_policy {
       enabled = false
@@ -104,9 +122,41 @@ resource "azurerm_monitor_diagnostic_setting" "cleanupfunc" {
 
   metric {
     category = "AllMetrics"
-
+    enabled  = true
     retention_policy {
       enabled = false
     }
   }
 }
+
+resource "azurerm_eventgrid_system_topic" "resource_events" {
+  count                  = var.are_functions_deployed ? 1 : 0
+  name                   = "evgt-resource-events"
+
+  resource_group_name    = azurerm_resource_group.cleanupfunc.name
+  location               = "global"
+
+  source_arm_resource_id = data.azurerm_subscription.primary.id
+  topic_type             = "Microsoft.Resources.Subscriptions"
+  tags = {
+    "Expires" = "False"
+  }
+  lifecycle {
+    ignore_changes = [tags]
+  }
+}
+
+resource "azurerm_eventgrid_system_topic_event_subscription" "resource_events" {
+  count = var.are_functions_deployed ? 1 : 0
+  name  = "evgs-resource-events"
+  system_topic        = azurerm_eventgrid_system_topic.resource_events[0].name
+  resource_group_name = azurerm_resource_group.cleanupfunc.name
+  azure_function_endpoint {
+    function_id = "${azurerm_function_app.cleanupfunc.id}/functions/ResourceTagger"
+
+    # defaults, specified to avoid "no-op" changes when 'apply' is re-ran
+    max_events_per_batch              = 1
+    preferred_batch_size_in_kilobytes = 64
+  }
+}
+

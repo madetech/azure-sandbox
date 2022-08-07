@@ -10,3 +10,8 @@ variable "custom_policies_tag_governance" {
   default     = []
 }
 
+variable "custom_policies_storage_account_governance" {
+  type        = list(map(string))
+  description = "List of custom policy definitions for the storage_account_governance policyset"
+  default     = []
+}

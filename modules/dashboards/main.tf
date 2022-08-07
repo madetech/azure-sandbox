@@ -3,7 +3,7 @@ resource "azurerm_resource_group" "dashboards" {
   location = var.region
 
   tags = {
-    "Expires" = "False"
+    Expires = "False"
   }
 
   lifecycle {
@@ -13,12 +13,12 @@ resource "azurerm_resource_group" "dashboards" {
   }
 }
 
-resource "azurerm_dashboard" "resourceoverview" {
+resource "azurerm_portal_dashboard" "resourceoverview" {
   name                = "Resources-Overview"
   resource_group_name = azurerm_resource_group.dashboards.name
   location            = azurerm_resource_group.dashboards.location
   tags = {
-    source = "terraform"
+    Expires = "False"
   }
 
   dashboard_properties = templatefile("./modules/dashboards/templates/resources.tpl", {})

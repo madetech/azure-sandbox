@@ -24,8 +24,9 @@ module "policy_definitions" {
 module "policy_assignments" {
   source = "./modules/policy-assignments"
 
-  region                      = var.default_region
-  tag_governance_policyset_id = module.policyset_definitions.tag_governance_policyset_id
+  region                                  = var.default_region
+  tag_governance_policyset_id             = module.policyset_definitions.tag_governance_policyset_id
+  storage_account_governance_policyset_id = module.policyset_definitions.storage_account_governance_policyset_id
 }
 
 module "policyset_definitions" {
@@ -49,16 +50,35 @@ module "policyset_definitions" {
     }
   ]
 
+  custom_policies_storage_account_governance = [
+    {
+      policyID = module.policy_definitions.restrictCloudShellStorage_policy_id
+    }
+  ]
+
 }
 
 module "functions" {
   source = "./modules/functions"
   region = var.default_region
   // The functions need to exist before they can wire up the eventgrid subscription
-  are_functions_deployed = 1
+  depends_on = [
+    module.policy_assignments # Make sure policy gets applied to these resources
+  ]
 }
 
 module "dashboards" {
   source = "./modules/dashboards"
   region = var.default_region
+  depends_on = [
+    module.policy_assignments # Make sure policy gets applied to these resources
+  ]
+}
+
+module "storage" {
+  source             = "./modules/storage"
+  cloud_shell_region = "West Europe"
+  depends_on = [
+    module.policy_assignments # Make sure policy gets applied to these resources
+  ]
 }

@@ -18,7 +18,7 @@
       },
       "enableLiveMetrics": true,
       "enableDependencyTracking": true,
-      "enablePerformanceCountersCollection": true,
+      "enablePerformanceCountersCollection": true
     }
   }
 }

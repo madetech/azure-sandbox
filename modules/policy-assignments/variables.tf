@@ -10,3 +10,8 @@ variable "tag_governance_policyset_id" {
   type        = string
   description = "The policy set definition id for tag_governance"
 }
+
+variable "storage_account_governance_policyset_id" {
+  type        = string
+  description = "The policy set definition id for storage_account_governance"
+}

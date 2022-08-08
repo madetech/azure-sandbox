@@ -6,7 +6,7 @@ terraform {
   }
   backend "azurerm" {
     resource_group_name  = "rg-tfstate-sandbox"
-    storage_account_name = "sttfstatesandbox"
+    storage_account_name = "sttfbackend1kytmnrjfh42t"
     container_name       = "tfstate-sandbox"
     key                  = "tfstate-sandbox.tfstate"
   }

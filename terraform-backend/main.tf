@@ -14,6 +14,9 @@ provider "azurerm" {
 resource "azurerm_resource_group" "tfbackend" {
   name     = "rg-tfstate-sandbox"
   location = "UK South"
+  tags = {
+    Expires = "False"
+  }
 }
 
 resource "random_string" "tfbackend_storage_account_name" {
@@ -36,6 +39,12 @@ resource "azurerm_storage_account" "tfbackend" {
   tags = {
     Expires = "False"
   }
+}
+
+resource "azurerm_storage_container" "tfbackend" {
+  name                  = "tfstate-sandbox"
+  storage_account_name  = azurerm_storage_account.tfbackend.name
+  container_access_type = "private"
 }
 
 output "tfbackend_storage_account_name" {

@@ -11,7 +11,7 @@ resource "azurerm_resource_group" "governancefunc" {
     ignore_changes = [tags]
   }
 }
-resource "random_string" "governancefunc_account_name" {
+resource "random_string" "governancefunc_unique_id" {
   length = 8
 
   numeric = true
@@ -22,7 +22,7 @@ resource "random_string" "governancefunc_account_name" {
 }
 
 resource "azurerm_storage_account" "governancefunc" {
-  name                     = "stgovernancefunc${random_string.governancefunc_account_name.result}"
+  name                     = "stgovernancefunc${random_string.governancefunc_unique_id.result}"
   resource_group_name      = azurerm_resource_group.governancefunc.name
   location                 = azurerm_resource_group.governancefunc.location
   account_tier             = "Standard"
@@ -101,8 +101,9 @@ resource "azurerm_application_insights" "governancefunc" {
   }
 }
 
+
 resource "azurerm_windows_function_app" "governancefunc" {
-  name                = "func-governancefunc"
+  name                = "func-governance-${random_string.governancefunc_unique_id.result}"
   resource_group_name = azurerm_resource_group.governancefunc.name
   location            = azurerm_resource_group.governancefunc.location
 

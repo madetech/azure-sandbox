@@ -24,13 +24,27 @@ az ad sp create-for-rbac --name terraform --role Owner --scopes /subscriptions/<
 ```
 
 3. Create a resource group, storage account and container for your terraform state
-    * Using cli: 
+* Using cli: 
 ```
 az group create -l uksouth -n rg-tfstate-sandbox
 az storage account create -n sttfstatesandbox -g rg-tfstate-sandbox -l uksouth --sku Standard_ZRS
 az storage container create -n tfstate-sandbox --account-name sttfstatesandbox
 ```
-*note: we use zone reduntant storage above for a little added robustness, if you want to bump that up to geo redundant or down to locally redundant is up to you.* 
+* Using terraform:
+    
+```
+cd terraform-backend
+terraform apply
+```
+4. Update main.tf with the correct storage account name etc for the backend:
+```
+  backend "azurerm" {
+    resource_group_name  = "rg-tfstate-sandbox"
+    storage_account_name = "sttfstatesandbox"
+    container_name       = "tfstate-sandbox"
+    key                  = "tfstate-sandbox.tfstate"
+  }
+```
 
 # references
 Policy management reused from:

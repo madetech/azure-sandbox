@@ -6,5 +6,11 @@
       "direction": "in",
       "schedule": "0 0 0 * * 6"
     }
-  ]
+  ],
+  "retry": {
+    "strategy": "exponentialBackoff",
+    "maxRetryCount": 4,
+    "minimumInterval": "00:05:00",
+    "maximumInterval": "01:00:00"
+}
 }

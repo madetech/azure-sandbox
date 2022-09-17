@@ -11,6 +11,7 @@ resource "azurerm_resource_group" "governancefunc" {
     ignore_changes = [tags]
   }
 }
+
 resource "random_string" "governancefunc_unique_id" {
   length = 8
 

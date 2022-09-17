@@ -3,7 +3,7 @@ param($Timer)
 
 $expResources = Search-AzGraph -Query 'Resources | where tags.Expires=~"True" | project id'
 foreach ($r in $expResources) {
-    Write-Information  "Expired Resource ID=" + $r.id
+    Write-Information  "Expired Resource ID=$r.id"
     Remove-AzResource -ResourceId $r.id -Force
 }
 
